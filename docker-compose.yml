@@ -28,6 +28,7 @@ services:
       DB_USER: ${POSTGRES_USER}
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       UPLOADS_DIR: /app/uploads
+      ADMIN_TOKEN: ${ADMIN_TOKEN:?Ustaw ADMIN_TOKEN w pliku .env}
     volumes:
       - uploads:/app/uploads
     ports:

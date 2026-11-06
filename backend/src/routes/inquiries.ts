@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { requireAdmin } from "../auth.js";
 import { pool } from "../db.js";
 import type { InquiryInput } from "../types/inquiry.js";
 
@@ -55,6 +56,23 @@ function validate(body: Record<string, unknown>) {
 
   return { input, errors };
 }
+
+inquiriesRouter.get("/", requireAdmin, async (_req, res) => {
+  const result = await pool.query(
+    `SELECT
+       i.id, i.name, i.email, i.phone,
+       to_char(i.date_from, 'YYYY-MM-DD') AS "dateFrom",
+       to_char(i.date_to, 'YYYY-MM-DD') AS "dateTo",
+       i.message, i.created_at AS "createdAt",
+       CASE WHEN v.id IS NULL THEN NULL
+            ELSE json_build_object('id', v.id, 'brand', v.brand, 'model', v.model)
+       END AS vehicle
+     FROM inquiries i
+     LEFT JOIN vehicles v ON v.id = i.vehicle_id
+     ORDER BY i.created_at DESC`,
+  );
+  res.json(result.rows);
+});
 
 inquiriesRouter.post("/", async (req, res) => {
   const { input, errors } = validate(req.body ?? {});

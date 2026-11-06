@@ -41,3 +41,14 @@ export type Vehicle = {
   specs: Spec[];
   ratings: Rating[];
 };
+
+export type VehicleInput = {
+  type: VehicleType;
+  brand: string;
+  model: string;
+  category: string;
+  year: number;
+  description: string;
+  pricePerDay: number;
+  available: boolean;
+};

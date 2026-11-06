@@ -9,6 +9,7 @@ function required(name: string): string {
 export const config = {
   port: Number(process.env.PORT ?? 4000),
   uploadsDir: process.env.UPLOADS_DIR ?? "uploads",
+  adminToken: required("ADMIN_TOKEN"),
   db: {
     host: required("DB_HOST"),
     port: Number(process.env.DB_PORT ?? 5432),
