@@ -128,6 +128,38 @@ VALUES
     '[{"label": "Lekkość", "value": 5.0}, {"label": "Szybkość", "value": 8.8}, {"label": "Komfort", "value": 8.8}, {"label": "Teren", "value": 9.9}]'
 );
 
+INSERT INTO vehicles
+    (type, brand, model, category, year, description, price_per_day, available, image_url, specs, ratings)
+VALUES
+(
+    'car', 'Citroën', 'C5 Exclusive', 'Limuzyna', 2012,
+    'Francuska limuzyna na zawieszeniu hydropneumatycznym Hydractive III+. Dyskretne dokładki, większe felgi i chip tuning diesla V6 do niemal 290 KM.',
+    390, TRUE, '/uploads/citroen-c5--niebieski.webp',
+    '[{"label": "Silnik", "value": "3.0 V6 HDi"}, {"label": "Moc", "value": "285 KM"}, {"label": "0-100 km/h", "value": "7,4 s"}, {"label": "Prędkość maks.", "value": "245 km/h"}, {"label": "Napęd", "value": "FWD"}, {"label": "Skrzynia biegów", "value": "Automat, 6 biegów"}]',
+    '[{"label": "Osiągi", "value": 6.2}, {"label": "Prowadzenie", "value": 6.6}, {"label": "Komfort", "value": 9.6}, {"label": "Unikatowość", "value": 8.7}]'
+),
+(
+    'car', 'Škoda', 'Octavia RS', 'Liftback', 2016,
+    'Liftback na co dzień i na tor: stage 1 na 2.0 TSI, obniżenie na sprężynach, dokładki i felgi 19 cali. Sportowo, ale bez krzykliwości.',
+    490, TRUE, '/uploads/skoda-octavia-rs--bialy.webp',
+    '[{"label": "Silnik", "value": "2.0 TSI"}, {"label": "Moc", "value": "300 KM"}, {"label": "0-100 km/h", "value": "5,6 s"}, {"label": "Prędkość maks.", "value": "260 km/h"}, {"label": "Napęd", "value": "FWD"}, {"label": "Skrzynia biegów", "value": "DSG, 6 biegów"}]',
+    '[{"label": "Osiągi", "value": 7.0}, {"label": "Prowadzenie", "value": 7.8}, {"label": "Komfort", "value": 8.0}, {"label": "Unikatowość", "value": 5.6}]'
+),
+(
+    'car', 'Chevrolet', 'Camaro ZL1 1LE', 'Muscle car', 2023,
+    'Camaro w najostrzejszej fabrycznej odsłonie: pakiet 1LE z karbonowym skrzydłem i splitterem, doładowane V8 po delikatnej mapie na 720 KM.',
+    1290, TRUE, '/uploads/chevrolet-camaro--niebieski.webp',
+    '[{"label": "Silnik", "value": "6.2 V8 kompresor"}, {"label": "Moc", "value": "720 KM"}, {"label": "0-100 km/h", "value": "3,5 s"}, {"label": "Prędkość maks.", "value": "310 km/h"}, {"label": "Napęd", "value": "RWD"}, {"label": "Skrzynia biegów", "value": "Automat, 10 biegów"}]',
+    '[{"label": "Osiągi", "value": 9.1}, {"label": "Prowadzenie", "value": 8.9}, {"label": "Komfort", "value": 6.4}, {"label": "Unikatowość", "value": 7.9}]'
+),
+(
+    'car', 'Ford', 'Mustang Shelby GT500', 'Muscle car', 2022,
+    'Najmocniejszy seryjny Mustang po lekkim strojeniu: 5.2 V8 z kompresorem na 800 KM, skrzynia DCT i karbonowe dodatki z umiarem.',
+    1590, TRUE, '/uploads/ford-mustang--zielony.webp',
+    '[{"label": "Silnik", "value": "5.2 V8 kompresor"}, {"label": "Moc", "value": "800 KM"}, {"label": "0-100 km/h", "value": "3,4 s"}, {"label": "Prędkość maks.", "value": "290 km/h"}, {"label": "Napęd", "value": "RWD"}, {"label": "Skrzynia biegów", "value": "DCT, 7 biegów"}]',
+    '[{"label": "Osiągi", "value": 9.4}, {"label": "Prowadzenie", "value": 8.4}, {"label": "Komfort", "value": 6.9}, {"label": "Unikatowość", "value": 8.4}]'
+);
+
 INSERT INTO vehicle_colors (vehicle_id, name, hex, image_url, geometry, position) VALUES
     (1, 'Czarny', '#0b0b0c', '/uploads/nissan-gt-r--czarny.webp', '{"w": 1400, "h": 535, "xl": 821, "yl": 533, "xr": 1268, "yr": 484}', 1),
     (1, 'Biały perłowy', '#eceef0', '/uploads/nissan-gt-r--bialy.webp', '{"w": 1400, "h": 535, "xl": 826, "yl": 533, "xr": 1285, "yr": 483}', 2),
@@ -165,4 +197,16 @@ INSERT INTO vehicle_colors (vehicle_id, name, hex, image_url, geometry, position
     (13, 'Czarny', '#0b0b0c', '/uploads/canyon-grizl--czarny.webp', '{"w": 986, "h": 768, "xl": 218, "yl": 767, "xr": 822, "yr": 725}', 1),
     (13, 'Stalowy', '#8f979f', '/uploads/canyon-grizl--stalowy.webp', '{"w": 986, "h": 767, "xl": 218, "yl": 765, "xr": 820, "yr": 724}', 2),
     (14, 'Czarny', '#0b0b0c', '/uploads/santa-cruz-v10--czarny.webp', '{"w": 990, "h": 737, "xl": 215, "yl": 736, "xr": 832, "yr": 692}', 1),
-    (14, 'Czerwony', '#d10a10', '/uploads/santa-cruz-v10--czerwony.webp', '{"w": 989, "h": 736, "xl": 217, "yl": 734, "xr": 837, "yr": 692}', 2);
+    (14, 'Czerwony', '#d10a10', '/uploads/santa-cruz-v10--czerwony.webp', '{"w": 989, "h": 736, "xl": 217, "yl": 734, "xr": 837, "yr": 692}', 2),
+    (15, 'Niebieski', '#1e4db5', '/uploads/citroen-c5--niebieski.webp', '{"w": 1400, "h": 518, "xl": 629, "yl": 516, "xr": 1221, "yr": 480}', 1),
+    (15, 'Biały perłowy', '#eceef0', '/uploads/citroen-c5--bialy.webp', '{"w": 1400, "h": 517, "xl": 628, "yl": 515, "xr": 1223, "yr": 479}', 2),
+    (15, 'Czarny', '#0b0b0c', '/uploads/citroen-c5--czarny.webp', '{"w": 1400, "h": 518, "xl": 628, "yl": 516, "xr": 1221, "yr": 480}', 3),
+    (16, 'Biały', '#eceef0', '/uploads/skoda-octavia-rs--bialy.webp', '{"w": 1371, "h": 550, "xl": 654, "yl": 548, "xr": 1203, "yr": 502}', 1),
+    (16, 'Srebrny', '#b9bdc2', '/uploads/skoda-octavia-rs--srebrny.webp', '{"w": 1371, "h": 550, "xl": 664, "yl": 548, "xr": 1205, "yr": 502}', 2),
+    (16, 'Czarny', '#0b0b0c', '/uploads/skoda-octavia-rs--czarny.webp', '{"w": 1371, "h": 551, "xl": 659, "yl": 549, "xr": 1202, "yr": 503}', 3),
+    (17, 'Niebieski', '#1e7ce0', '/uploads/chevrolet-camaro--niebieski.webp', '{"w": 1400, "h": 494, "xl": 702, "yl": 492, "xr": 1235, "yr": 439}', 1),
+    (17, 'Stalowy', '#9a9ea3', '/uploads/chevrolet-camaro--szary.webp', '{"w": 1400, "h": 493, "xl": 701, "yl": 491, "xr": 1230, "yr": 439}', 2),
+    (17, 'Czarny', '#0b0b0c', '/uploads/chevrolet-camaro--czarny.webp', '{"w": 1400, "h": 494, "xl": 698, "yl": 492, "xr": 1226, "yr": 440}', 3),
+    (18, 'Zielony', '#1d3a2a', '/uploads/ford-mustang--zielony.webp', '{"w": 1400, "h": 479, "xl": 603, "yl": 477, "xr": 1211, "yr": 449}', 1),
+    (18, 'Biały perłowy', '#eceef0', '/uploads/ford-mustang--bialy.webp', '{"w": 1400, "h": 478, "xl": 603, "yl": 476, "xr": 1213, "yr": 448}', 2),
+    (18, 'Czarny', '#0b0b0c', '/uploads/ford-mustang--czarny.webp', '{"w": 1400, "h": 477, "xl": 602, "yl": 475, "xr": 1212, "yr": 448}', 3);

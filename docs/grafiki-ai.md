@@ -10,7 +10,7 @@ w ramach subskrypcji ChatGPT jednego z członków zespołu.
 
 | Grafika | Gdzie w repozytorium | Jak powstała |
 |---|---|---|
-| Zdjęcia pojazdów (9 aut, 5 rowerów, 37 wariantów kolorów) | `backend/seed-images/` | gpt-image-2. Każdy kolor to edycja zdjęcia bazowego tego samego pojazdu. Tło wycięliśmy lokalnie modelem BiRefNet (biblioteka [rembg](https://github.com/danielgatis/rembg)). |
+| Zdjęcia pojazdów (13 aut, 5 rowerów, 49 wariantów kolorów) | `backend/seed-images/` | gpt-image-2. Każdy kolor to edycja zdjęcia bazowego tego samego pojazdu. Tło wycięliśmy lokalnie modelem BiRefNet (biblioteka [rembg](https://github.com/danielgatis/rembg)). |
 | Scena z mokrym asfaltem i mgłą | `frontend/public/scene/` | gpt-image-2 |
 | Tła strony z górami i mgłą | `frontend/public/bg/`, `frontend/public/hero-mgla.webp` | gpt-image-2 |
 | Logo Redline Rent i monogram RR | `frontend/public/brand/`, `frontend/src/app/icon.svg` | projekt wygenerowany przez gpt-image-2, potem przerysowany na wektor (SVG) |
@@ -27,8 +27,9 @@ naszej strony.
 
 - Pojazdy na stronie to wizualizacje wygenerowane przez AI, a nie zdjęcia prawdziwej floty.
 - Ceny, parametry, oceny, dostępność, adres odbioru i godziny otwarcia są przykładowe.
-- Nazwy marek i modeli (Nissan, Porsche, Toyota, BMW, Audi, Dodge, Lexus, Specialized, Santa Cruz, Canyon)
-  należą do ich właścicieli i są użyte wyłącznie poglądowo. Projekt nie jest powiązany z tymi firmami.
+- Nazwy marek i modeli (Nissan, Porsche, Toyota, BMW, Audi, Dodge, Lexus, Citroën, Škoda, Chevrolet, Ford,
+  Specialized, Santa Cruz, Canyon) należą do ich właścicieli i są użyte wyłącznie poglądowo. Projekt nie jest
+  powiązany z tymi firmami.
 - Przy generowaniu prosiliśmy o pojazdy bez czytelnych logo i napisów, a tablice rejestracyjne są puste.
 
 Prawdziwa wypożyczalnia powinna pokazywać zdjęcia aut, które faktycznie ma w ofercie. Inaczej wprowadzałaby
