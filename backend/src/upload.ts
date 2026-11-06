@@ -1,3 +1,4 @@
+import { rm } from "node:fs/promises";
 import path from "node:path";
 import multer from "multer";
 import { config } from "./config.js";
@@ -24,4 +25,13 @@ export const upload = multer({
 
 export function publicUrl(filename: string) {
   return `/uploads/${path.basename(filename)}`;
+}
+
+export async function deleteImageFiles(urls: (string | null)[]) {
+  const files = new Set(
+    urls
+      .filter((url) => url !== null)
+      .map((url) => path.join(config.uploadsDir, path.basename(url))),
+  );
+  await Promise.all([...files].map((file) => rm(file, { force: true })));
 }

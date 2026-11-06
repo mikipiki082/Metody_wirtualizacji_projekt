@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response, Router } from "express";
 import { requireAdmin } from "../auth.js";
 import { pool } from "../db.js";
-import { publicUrl, upload } from "../upload.js";
+import { deleteImageFiles, publicUrl, upload } from "../upload.js";
 import { toColumns, validateVehicle } from "../vehicle-input.js";
 import type { Vehicle } from "../types/vehicle.js";
 
@@ -113,8 +113,11 @@ vehiclesRouter.patch("/:id", requireAdmin, findVehicle, async (req, res) => {
 });
 
 vehiclesRouter.delete("/:id", requireAdmin, findVehicle, async (_req, res) => {
-  await pool.query("DELETE FROM vehicles WHERE id = $1", [
-    res.locals.vehicle.id,
+  const vehicle: Vehicle = res.locals.vehicle;
+  await pool.query("DELETE FROM vehicles WHERE id = $1", [vehicle.id]);
+  await deleteImageFiles([
+    vehicle.imageUrl,
+    ...vehicle.colors.map((color) => color.imageUrl),
   ]);
   res.status(204).end();
 });
