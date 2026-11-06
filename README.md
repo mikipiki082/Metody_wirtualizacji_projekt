@@ -298,7 +298,7 @@ cd frontend && npm install && npm run dev   # http://localhost:3000, /api/* idzi
 ## Kamienie milowe
 
 - [x] **KM1** - działający szkielet: trzy kontenery, frontend pobiera JSON z backendu, backend łączy się z bazą
-- [ ] **KM2** - endpointy backendu
+- [x] **KM2** - endpointy backendu
 - [ ] **KM3** - baza danych (relacje) i frontend
 - [ ] Stan końcowy - zmiany od klienta, testy, dokumentacja
 
