@@ -490,6 +490,11 @@
   color: var(--steel);
 }
 
+.calendar .rdp-selected {
+  font-size: inherit;
+  font-weight: 600;
+}
+
 .calendar .rdp-chevron {
   fill: var(--steel);
 }
