@@ -49,8 +49,8 @@ Node.js ani PostgreSQL nie trzeba instalować, wszystko działa w kontenerach.
    copy .env.example .env    # Windows (cmd, PowerShell)
    ```
 
-3. Otwórz `.env` i wpisz dowolne hasło do bazy w `POSTGRES_PASSWORD`,
-   np. wynik polecenia `openssl rand -hex 16`. Bez hasła baza nie wystartuje.
+3. Otwórz `.env` i wpisz dowolne hasło do bazy w `POSTGRES_PASSWORD` oraz hasło administratora
+   w `ADMIN_TOKEN`, np. wynik polecenia `openssl rand -hex 16`. Bez nich kontenery nie wystartują.
 
 4. Zbuduj i uruchom kontenery:
 
@@ -97,7 +97,7 @@ uruchomieniu Docker przenosi je do pustego wolumenu `uploads`, a nowe zdjęcia t
 ### Gdy coś nie działa
 
 - **Port jest zajęty:** zmień `FRONTEND_PORT` albo `BACKEND_PORT` w `.env` i uruchom ponownie.
-- **Baza nie startuje:** sprawdź, czy w `.env` jest ustawione `POSTGRES_PASSWORD`.
+- **Kontenery nie startują:** sprawdź, czy w `.env` są ustawione `POSTGRES_PASSWORD` i `ADMIN_TOKEN`.
 - **Brak zmian w danych po edycji `db/init/`:** zresetuj bazę poleceniem `docker compose down -v`.
 - **Stan kontenerów:** `docker compose ps`, logi: `docker compose logs -f`.
 
@@ -129,20 +129,67 @@ flowchart LR
 
 ## API
 
-| Metoda | Ścieżka | Opis |
-|---|---|---|
-| `GET` | `/health` | Stan backendu i połączenia z bazą. `503`, gdy baza nie odpowiada. |
-| `GET` | `/vehicles` | Lista pojazdów. Filtr `?type=car` albo `?type=bike`, inny typ zwraca `400`. |
-| `GET` | `/vehicles/:id` | Jeden pojazd. `400` przy złym id, `404` gdy nie istnieje. |
-| `POST` | `/vehicles/:id/image` | Wgranie zdjęcia pojazdu (`multipart/form-data`, pole `image`, JPG/PNG/WEBP do 5 MB). |
-| `POST` | `/inquiries` | Zapytanie z formularza kontaktowego. `201` z id, `400` z listą błędnych pól. |
-| `GET` | `/uploads/:plik` | Pliki zdjęć. |
+| Metoda | Ścieżka | Admin | Opis |
+|---|---|---|---|
+| `GET` | `/health` | | Stan backendu i połączenia z bazą. `503`, gdy baza nie odpowiada. |
+| `GET` | `/vehicles` | | Lista pojazdów. Filtr `?type=car` albo `?type=bike`, inny typ zwraca `400`. |
+| `GET` | `/vehicles/:id` | | Jeden pojazd. `400` przy złym id, `404` gdy nie istnieje. |
+| `POST` | `/vehicles` | tak | Dodanie pojazdu. `201` z nowym pojazdem, `400` z listą błędnych pól. |
+| `PATCH` | `/vehicles/:id` | tak | Zmiana wybranych pól pojazdu. `200` z pojazdem, `400`, `404`. |
+| `DELETE` | `/vehicles/:id` | tak | Usunięcie pojazdu. `204` bez treści, `404` gdy nie istnieje. |
+| `POST` | `/vehicles/:id/image` | tak | Wgranie zdjęcia pojazdu (`multipart/form-data`, pole `image`, JPG/PNG/WEBP do 5 MB). |
+| `POST` | `/inquiries` | | Zapytanie z formularza kontaktowego. `201` z id, `400` z listą błędnych pól. |
+| `GET` | `/inquiries` | tak | Lista zapytań od najnowszych, z nazwą pojazdu. |
+| `GET` | `/uploads/:plik` | | Pliki zdjęć. |
 
 ```bash
 curl http://localhost:4000/vehicles?type=bike
-curl -F image=@zdjecie.png http://localhost:4000/vehicles/1/image
 curl -X POST http://localhost:4000/inquiries -H 'Content-Type: application/json' \
   -d '{"name":"Jan Kowalski","email":"jan@example.com","vehicleId":1,"dateFrom":"2026-12-04","dateTo":"2026-12-06","message":"Czy auto będzie wolne?"}'
+```
+
+### Endpointy administratora
+
+Endpointy oznaczone w tabeli jako „Admin” wymagają nagłówka `Authorization: Bearer <ADMIN_TOKEN>`
+z hasłem ustawionym w `.env`. Bez niego albo ze złym hasłem backend odpowiada `401 {"error":"Brak dostępu"}`.
+
+```bash
+TOKEN=$(grep ADMIN_TOKEN .env | cut -d= -f2)
+
+curl http://localhost:4000/inquiries -H "Authorization: Bearer $TOKEN"
+
+curl -X POST http://localhost:4000/vehicles -H "Authorization: Bearer $TOKEN" \
+  -H 'Content-Type: application/json' \
+  -d '{"type":"car","brand":"Mazda","model":"MX-5","category":"Roadster","year":2024,"pricePerDay":590}'
+
+curl -X PATCH http://localhost:4000/vehicles/15 -H "Authorization: Bearer $TOKEN" \
+  -H 'Content-Type: application/json' -d '{"pricePerDay":650,"available":false}'
+
+curl -X DELETE http://localhost:4000/vehicles/15 -H "Authorization: Bearer $TOKEN"
+
+curl -F image=@zdjecie.png http://localhost:4000/vehicles/1/image -H "Authorization: Bearer $TOKEN"
+```
+
+Pola pojazdu przy `POST` i `PATCH`:
+
+| Pole | Typ | Zasady |
+|---|---|---|
+| `type` | tekst | `car` albo `bike` |
+| `brand`, `category` | tekst | od 1 do 60 znaków |
+| `model` | tekst | od 1 do 80 znaków |
+| `year` | liczba całkowita | od 1950 do przyszłego roku |
+| `pricePerDay` | liczba całkowita | od 1 do 100000 zł |
+| `description` | tekst, opcjonalne | do 1000 znaków |
+| `available` | `true` / `false`, opcjonalne | domyślnie `true` |
+
+`POST` wymaga wszystkich pól poza opcjonalnymi, a `PATCH` przyjmuje dowolną ich część. Przy błędach backend
+zwraca `400` i opisuje każde złe pole:
+
+```json
+{
+  "error": "Popraw zaznaczone pola",
+  "fields": { "pricePerDay": "Cena musi być liczbą całkowitą od 1 do 100000" }
+}
 ```
 
 Przykładowy pojazd (skrócone listy `specs`, `ratings` i `colors`):
@@ -209,6 +256,8 @@ Zdjęcie bez `geometry` (np. wgrane przez `POST /vehicles/:id/image`) wyświetla
 │       ├── app.ts         # konfiguracja Express, trasy, obsługa błędów
 │       ├── config.ts      # odczyt zmiennych środowiskowych
 │       ├── db.ts          # pula połączeń z PostgreSQL
+│       ├── auth.ts        # sprawdzanie hasła administratora
+│       ├── vehicle-input.ts # walidacja danych pojazdu
 │       ├── upload.ts      # przyjmowanie plików (multer)
 │       ├── routes/        # endpointy
 │       └── types/         # typy danych
