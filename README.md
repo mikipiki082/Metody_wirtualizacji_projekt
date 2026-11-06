@@ -2,7 +2,7 @@
 
 Projekt z przedmiotu **Metody wirtualizacji** (Cyberbezpieczeństwo, sem. 3, Politechnika Poznańska, 2026/2027).
 
-Redline Rent to wypożyczalnia sportowych i tuningowanych samochodów oraz rowerów premium. Aplikacja składa się
+Redline Rent to fikcyjna wypożyczalnia sportowych i tuningowanych samochodów oraz rowerów premium. Aplikacja składa się
 z trzech osobnych kontenerów (frontend, backend, baza danych) uruchamianych przez Docker Compose.
 
 **Zespół:** Filip Piątek, Jakub Bilski, Mikołaj Kortus
@@ -247,5 +247,8 @@ cd frontend && npm install && npm run dev   # http://localhost:3000, /api/* idzi
 ## Wykorzystanie AI
 
 Zgodnie z zasadami przedmiotu informujemy, że przy projekcie korzystaliśmy z narzędzi AI jako pomocy
-przy konfiguracji Dockera i pisaniu kodu. Grafiki (zdjęcia pojazdów, tła i logo) oraz font nagłówków
-powstały z pomocą AI. Cały kod rozumiemy i potrafimy go wyjaśnić oraz zmodyfikować.
+przy konfiguracji Dockera i pisaniu kodu. Cały kod rozumiemy i potrafimy go wyjaśnić oraz zmodyfikować.
+
+Wszystkie grafiki w projekcie wygenerowaliśmy modelem OpenAI gpt-image-2, a font nagłówków powstał z pomocą AI.
+Redline Rent jest fikcyjną firmą, a pojazdy na stronie to wizualizacje, nie zdjęcia prawdziwej floty.
+Szczegóły i prawa do grafik opisujemy w [docs/grafiki-ai.md](docs/grafiki-ai.md).
