@@ -7,50 +7,63 @@ z trzech osobnych kontenerów (frontend, backend, baza danych) uruchamianych prz
 
 **Zespół:** Filip Piątek, Jakub Bilski, Mikołaj Kortus
 
-## Architektura
+![Strona główna Redline Rent](docs/screenshots/strona-glowna.webp)
 
-```mermaid
-flowchart LR
-    U[Przeglądarka] -->|HTTP :3000| F[frontend<br/>Next.js]
-    F -->|"HTTP + JSON<br/>sieć frontend-net"| B[backend<br/>Express]
-    B -->|"SQL :5432<br/>sieć backend-net"| D[(db<br/>PostgreSQL)]
-    D --- V[(wolumen<br/>db-data)]
-    B --- Z[(wolumen<br/>uploads)]
-```
+## Zrzuty ekranu
 
-- **Frontend łączy się wyłącznie z backendem.** Przeglądarka wysyła zapytania na `/api/...` do frontendu,
-  a serwer Next.js przekazuje je do backendu w sieci Dockera.
-- **Baza jest w osobnej sieci** (`backend-net`, `internal: true`): dostęp do niej ma tylko backend,
-  frontend nie widzi jej nawet po nazwie. Port bazy nie jest wystawiony na zewnątrz.
-- **Dane przetrwają restart kontenerów** - baza zapisuje je w wolumenie `db-data`, a zdjęcia pojazdów
-  w wolumenie `uploads`.
-- Hasła i adresy są w zmiennych środowiskowych (plik `.env`, którego nie ma w repozytorium).
+| Samochody | Rowery |
+|---|---|
+| ![Katalog samochodów](docs/screenshots/samochody.webp) | ![Katalog rowerów](docs/screenshots/rowery.webp) |
+| **Strona pojazdu** | **Rezerwacja** |
+| ![Strona pojazdu](docs/screenshots/pojazd.webp) | ![Formularz rezerwacji z kalendarzem](docs/screenshots/rezerwacja.webp) |
 
-| Usługa | Technologia | Obraz | Port na hoście |
-|---|---|---|---|
-| `frontend` | Next.js 16, TypeScript, Tailwind CSS, shadcn/ui | własny (`frontend/Dockerfile`) | `3000` |
-| `backend` | Node.js 24, Express 5, TypeScript, `pg`, `multer` | własny (`backend/Dockerfile`) | `127.0.0.1:4000` (do testów API) |
-| `db` | PostgreSQL 18 | oficjalny `postgres:18-alpine` | brak |
-| `pgadmin` (opcjonalnie) | pgAdmin 4 | oficjalny `dpage/pgadmin4:9` | `127.0.0.1:5050` |
+Strona działa też na telefonie:
+
+![Widok na telefonie](docs/screenshots/telefon.webp)
 
 ## Uruchomienie
 
-Wymagany Docker z Docker Compose.
+### Czego potrzebujesz
 
-```bash
-git clone git@github.com:mikipiki082/Metody_wirtualizacji_projekt.git
-cd Metody_wirtualizacji_projekt
+- **Docker z Docker Compose.** Na Windowsie i macOS wystarczy
+  [Docker Desktop](https://www.docker.com/products/docker-desktop/) (musi być włączony),
+  na Linuksie Docker Engine z wtyczką `docker compose`.
+- **Git** do pobrania repozytorium.
+- Wolne porty `3000` i `4000` na komputerze.
 
-cp .env.example .env
-# w pliku .env ustaw POSTGRES_PASSWORD, np. wynik: openssl rand -hex 16
+Node.js ani PostgreSQL nie trzeba instalować, wszystko działa w kontenerach.
 
-docker compose up --build
-```
+### Krok po kroku
 
-Po starcie:
+1. Pobierz repozytorium:
 
-- aplikacja: <http://localhost:3000>
-- API backendu: <http://localhost:4000/health>, <http://localhost:4000/vehicles>
+   ```bash
+   git clone https://github.com/mikipiki082/Metody_wirtualizacji_projekt.git
+   cd Metody_wirtualizacji_projekt
+   ```
+
+2. Utwórz plik `.env` ze wzoru:
+
+   ```bash
+   cp .env.example .env      # Linux, macOS, Git Bash
+   copy .env.example .env    # Windows (cmd, PowerShell)
+   ```
+
+3. Otwórz `.env` i wpisz dowolne hasło do bazy w `POSTGRES_PASSWORD`,
+   np. wynik polecenia `openssl rand -hex 16`. Bez hasła baza nie wystartuje.
+
+4. Zbuduj i uruchom kontenery:
+
+   ```bash
+   docker compose up --build
+   ```
+
+   Pierwsze budowanie trwa kilka minut. Żeby kontenery działały w tle, dodaj `-d`.
+
+5. Otwórz aplikację: <http://localhost:3000>. API backendu jest pod
+   <http://localhost:4000/health> i <http://localhost:4000/vehicles>.
+
+6. Zatrzymanie: `Ctrl+C` w terminalu albo `docker compose down`. Dane zostają w wolumenach.
 
 Kontenery startują w kolejności: `db` → `backend` → `frontend`. Każdy kolejny czeka,
 aż poprzedni przejdzie healthcheck (`depends_on: condition: service_healthy`).
@@ -80,6 +93,39 @@ gdy wolumen jest pusty. Po zmianie tych plików trzeba zresetować bazę: `docke
 
 Zdjęcia startowe pojazdów (`backend/seed-images/`) są kopiowane do obrazu backendu. Przy pierwszym
 uruchomieniu Docker przenosi je do pustego wolumenu `uploads`, a nowe zdjęcia trafiają już tylko do wolumenu.
+
+### Gdy coś nie działa
+
+- **Port jest zajęty:** zmień `FRONTEND_PORT` albo `BACKEND_PORT` w `.env` i uruchom ponownie.
+- **Baza nie startuje:** sprawdź, czy w `.env` jest ustawione `POSTGRES_PASSWORD`.
+- **Brak zmian w danych po edycji `db/init/`:** zresetuj bazę poleceniem `docker compose down -v`.
+- **Stan kontenerów:** `docker compose ps`, logi: `docker compose logs -f`.
+
+## Architektura
+
+```mermaid
+flowchart LR
+    U[Przeglądarka] -->|HTTP :3000| F[frontend<br/>Next.js]
+    F -->|"HTTP + JSON<br/>sieć frontend-net"| B[backend<br/>Express]
+    B -->|"SQL :5432<br/>sieć backend-net"| D[(db<br/>PostgreSQL)]
+    D --- V[(wolumen<br/>db-data)]
+    B --- Z[(wolumen<br/>uploads)]
+```
+
+- **Frontend łączy się wyłącznie z backendem.** Przeglądarka wysyła zapytania na `/api/...` do frontendu,
+  a serwer Next.js przekazuje je do backendu w sieci Dockera.
+- **Baza jest w osobnej sieci** (`backend-net`, `internal: true`): dostęp do niej ma tylko backend,
+  frontend nie widzi jej nawet po nazwie. Port bazy nie jest wystawiony na zewnątrz.
+- **Dane przetrwają restart kontenerów** - baza zapisuje je w wolumenie `db-data`, a zdjęcia pojazdów
+  w wolumenie `uploads`.
+- Hasła i adresy są w zmiennych środowiskowych (plik `.env`, którego nie ma w repozytorium).
+
+| Usługa | Technologia | Obraz | Port na hoście |
+|---|---|---|---|
+| `frontend` | Next.js 16, TypeScript, Tailwind CSS, shadcn/ui | własny (`frontend/Dockerfile`) | `3000` |
+| `backend` | Node.js 24, Express 5, TypeScript, `pg`, `multer` | własny (`backend/Dockerfile`) | `127.0.0.1:4000` (do testów API) |
+| `db` | PostgreSQL 18 | oficjalny `postgres:18-alpine` | brak |
+| `pgadmin` (opcjonalnie) | pgAdmin 4 | oficjalny `dpage/pgadmin4:9` | `127.0.0.1:5050` |
 
 ## API
 
