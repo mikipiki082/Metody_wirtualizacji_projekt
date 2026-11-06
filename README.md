@@ -21,6 +21,14 @@ Strona działa też na telefonie:
 
 ![Widok na telefonie](docs/screenshots/telefon.webp)
 
+### Panel administratora
+
+| Logowanie | Pojazdy |
+|---|---|
+| ![Logowanie do panelu administratora](docs/screenshots/admin-logowanie.webp) | ![Lista pojazdów w panelu](docs/screenshots/admin-pojazdy.webp) |
+| **Dodawanie pojazdu z walidacją** | **Zapytania od klientów** |
+| ![Formularz dodawania pojazdu z błędami walidacji](docs/screenshots/admin-formularz.webp) | ![Lista zapytań od klientów](docs/screenshots/admin-zapytania.webp) |
+
 ## Uruchomienie
 
 ### Czego potrzebujesz
@@ -61,7 +69,8 @@ Node.js ani PostgreSQL nie trzeba instalować, wszystko działa w kontenerach.
    Pierwsze budowanie trwa kilka minut. Żeby kontenery działały w tle, dodaj `-d`.
 
 5. Otwórz aplikację: <http://localhost:3000>. API backendu jest pod
-   <http://localhost:4000/health> i <http://localhost:4000/vehicles>.
+   <http://localhost:4000/health> i <http://localhost:4000/vehicles>. Panel administratora jest pod
+   <http://localhost:3000/admin>, hasło to wartość `ADMIN_TOKEN` z pliku `.env`.
 
 6. Zatrzymanie: `Ctrl+C` w terminalu albo `docker compose down`. Dane zostają w wolumenach.
 
@@ -270,10 +279,10 @@ Zdjęcie bez `geometry` (np. wgrane przez `POST /vehicles/:id/image`) wyświetla
     ├── next.config.ts     # przekierowanie /api/* do backendu
     ├── public/            # logo, tła strony, scena pojazdów
     └── src/
-        ├── app/           # strony: główna, /samochody, /rowery, /jak-wynajac, /kontakt
-        ├── components/    # komponenty strony
+        ├── app/           # strony: główna, /samochody, /rowery, /jak-wynajac, /kontakt, /admin
+        ├── components/    # komponenty strony, w admin/ panel administratora
         ├── fonts/         # font nagłówków Ave Display
-        ├── lib/           # API, scena pojazdu, daty i koszt wynajmu
+        ├── lib/           # API, panel administratora, scena pojazdu, daty i koszt wynajmu
         └── types/         # typy danych
 ```
 
