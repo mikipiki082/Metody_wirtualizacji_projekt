@@ -5,6 +5,12 @@ const dayFormat = new Intl.DateTimeFormat("pl-PL", {
   month: "short",
 });
 
+const yearFormat = new Intl.DateTimeFormat("pl-PL", {
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+});
+
 export function toIsoDate(date: Date) {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
@@ -32,13 +38,14 @@ export function formatDays(count: number) {
   return `${count} ${plural(count, "doba", "doby", "dób")}`;
 }
 
-export function formatRange(from: string, to: string) {
+export function formatRange(from: string, to: string, withYear = false) {
+  const format = withYear ? yearFormat : dayFormat;
   const start = parseIsoDate(from);
   const end = parseIsoDate(to);
   if (!start) {
     return "";
   }
   return end
-    ? `${dayFormat.format(start)} - ${dayFormat.format(end)}`
-    : `od ${dayFormat.format(start)}`;
+    ? `${format.format(start)} - ${format.format(end)}`
+    : `od ${format.format(start)}`;
 }

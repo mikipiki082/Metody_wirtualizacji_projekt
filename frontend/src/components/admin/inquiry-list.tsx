@@ -148,8 +148,15 @@ function InquiryDates({ inquiry }: { inquiry: Inquiry }) {
 
   return (
     <span>
-      {formatRange(inquiry.dateFrom, inquiry.dateTo ?? "")}
-      {days > 0 && <span className="text-steel"> · {formatDays(days)}</span>}
+      {formatRange(inquiry.dateFrom, inquiry.dateTo ?? "", true)}
+      {days > 0 && (
+        <>
+          {" "}
+          <span className="whitespace-nowrap text-steel">
+            · {formatDays(days)}
+          </span>
+        </>
+      )}
     </span>
   );
 }
