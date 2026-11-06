@@ -27,6 +27,9 @@ services:
       DB_NAME: ${POSTGRES_DB}
       DB_USER: ${POSTGRES_USER}
       DB_PASSWORD: ${POSTGRES_PASSWORD}
+      UPLOADS_DIR: /app/uploads
+    volumes:
+      - uploads:/app/uploads
     ports:
       - "127.0.0.1:${BACKEND_PORT:-4000}:4000"
     networks:
@@ -63,3 +66,4 @@ networks:
 
 volumes:
   db-data:
+  uploads:

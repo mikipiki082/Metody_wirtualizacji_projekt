@@ -8,6 +8,7 @@ function required(name: string): string {
 
 export const config = {
   port: Number(process.env.PORT ?? 4000),
+  uploadsDir: process.env.UPLOADS_DIR ?? "uploads",
   db: {
     host: required("DB_HOST"),
     port: Number(process.env.DB_PORT ?? 5432),
