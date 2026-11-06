@@ -59,7 +59,34 @@ services:
       backend:
         condition: service_healthy
 
+  pgadmin:
+    image: dpage/pgadmin4:9
+    profiles: ["tools"]
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+    entrypoint: >
+      sh -c 'echo "db:5432:*:$$DB_USER:$$DB_PASSWORD" > /var/lib/pgadmin/pgpass
+      && chmod 600 /var/lib/pgadmin/pgpass
+      && exec /entrypoint.sh'
+    volumes:
+      - ./pgadmin/servers.json:/pgadmin4/servers.json:ro
+    ports:
+      - "127.0.0.1:${PGADMIN_PORT:-5050}:80"
+    networks:
+      - default
+      - backend-net
+    depends_on:
+      db:
+        condition: service_healthy
+
 networks:
+  default:
   frontend-net:
   backend-net:
     internal: true
