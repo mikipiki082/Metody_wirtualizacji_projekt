@@ -14,6 +14,7 @@ w ramach subskrypcji ChatGPT jednego z członków zespołu.
 | Scena z mokrym asfaltem i mgłą | `frontend/public/scene/` | gpt-image-2 |
 | Tła strony z górami i mgłą | `frontend/public/bg/`, `frontend/public/hero-mgla.webp` | gpt-image-2 |
 | Logo Redline Rent i monogram RR | `frontend/public/brand/`, `frontend/src/app/icon.svg` | projekt wygenerowany przez gpt-image-2, potem przerysowany na wektor (SVG) |
+| Obrazek podglądu linku (OpenGraph) | `frontend/src/app/opengraph-image.jpg` | złożony w HTML i CSS z grafik powyżej (logo, trzy auta, scena), z odbiciami jak na stronie. Sam obrazek nie był generowany przez AI. |
 | Font nagłówków Ave Display | `frontend/src/fonts/` | zbudowany z pomocą AI na podstawie monogramu RR, osobne repozytorium [AveJaPl/ave-display](https://github.com/AveJaPl/ave-display) |
 
 Odbić w asfalcie, cieni pod kołami i mgły przed pojazdami nie generuje AI. Rysuje je kod strony

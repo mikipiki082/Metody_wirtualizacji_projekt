@@ -19,9 +19,15 @@ const aveDisplay = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://redline.pbdevs.com"),
   title: "Redline Rent - wypożyczalnia sportowych aut i rowerów",
   description:
     "Wypożyczalnia sportowych i tuningowanych samochodów oraz rowerów premium.",
+  openGraph: {
+    type: "website",
+    siteName: "Redline Rent",
+    locale: "pl_PL",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
